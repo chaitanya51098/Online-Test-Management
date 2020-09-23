@@ -20,8 +20,7 @@ import com.capg.otms.question.repository.QuestionRepository;
 import com.capg.otms.question.service.QuestionServiceImpl;
 
 
-@Configuration
-@ComponentScan("com.capg.otms")
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=QuestionControllerTest.class)
 public class QuestionControllerTest {

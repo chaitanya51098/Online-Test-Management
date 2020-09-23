@@ -5,15 +5,22 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
+@Table(name="Question")
 public class Question {
 
 	@Id
 	private long questionId;
 	@ElementCollection
 	private List<String> questionOptions;
+	
+	@NotEmpty(message="QUESTION SHOULD NOT EMPTY")
 	private String questionTitle;
+	
+	@NotEmpty(message="QUESTION ANSWER NOT EMPTY")
 	private int questionAnswer;
 	private double questionMarks=0.0;
 	private int chosenAnswer;
