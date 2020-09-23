@@ -1,99 +1,47 @@
 package com.capg.otms;
 
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.capg.otms.question.model.Question;
+import com.capg.otms.question.repository.QuestionRepository;
 import com.capg.otms.question.service.QuestionServiceImpl;
 
-public class QuestionControllerTest extends OtmsModuleApplicationTests {
 
+@Configuration
+@ComponentScan("com.capg.otms")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes=QuestionControllerTest.class)
+public class QuestionControllerTest {
 	
-	  @Autowired private WebApplicationContext wac;
-	  
-	  private MockMvc mockMvc;
-	  
-	  @Autowired QuestionServiceImpl service;
-	  
-	  @Before public void setup() throws Exception { mockMvc =
-	  MockMvcBuilders.webAppContextSetup(wac).build(); }
-	  
-	  @Test public void testAddQuestion() throws Exception { String url =
-	  "/questions/add"; String json = "{\r\n" + "  \r\n" +
-	  "	\"questionId\":\"990\",\r\n" + "	\"questionTitle\":\"3+4\",\r\n" +
-	  "	\"questionOption\":[\"0\",\"7\",\"4\",\"6\"],\r\n" +
-	  "	\"questionAnswer\":7,\r\n" + "	\"questionMarks\":5\r\n" + "	\r\n" +
-	  "}"; mockMvc.perform(
-	  post(url).contentType(MediaType.APPLICATION_JSON).content(json).accept(
-	  MediaType.APPLICATION_JSON)) .andExpect(status().isNotFound());
-	  
-	  }
-	  
-	  @Test public void testDeleteQuestion() throws Exception {
-	  
-	  String url = "/question/delete/id/1011";
-	  
-	  MvcResult mvcResult =
-	  mockMvc.perform(MockMvcRequestBuilders.delete(url)).andReturn();
-	  
-	  int status = mvcResult.getResponse().getStatus(); Question expected =
-	  service.deleteQuestion(1011);
-	  
-	  if(expected!=null) { assertEquals(status,200); }
-	  
-	  else{ assertEquals(status, 404); }
-	  
-	  }
-	  
-	  @Test public void testUpdateQuestion() throws Exception {
-	  
-	  String url = "/question/update";
-	  
-	  String json = "{\r\n" + "  \r\n" + "	\"questionId\":\"999\",\r\n" +
-	  "	\"questionTitle\":\"3+4\",\r\n" +
-	  "	\"questionOption\":[\"0\",\"7\",\"4\",\"6\"],\r\n" +
-	  "	\"questionAnswer\":7,\r\n" + "	\"questionMarks\":5\r\n" + "	\r\n" +
-	  "}"; mockMvc.perform(
-	  post(url).contentType(MediaType.APPLICATION_JSON).content(json).accept(
-	  MediaType.APPLICATION_JSON)) .andExpect(status().isOk());
-	  
-	  }
-	  
-	  @Test public void testGetListOfQuestions() {
-	  
-	  List<Question> questionList=service.getListOfQuestions();
-	  assertEquals(questionList.size(),10); }
-	 
 	
+	@Autowired
+	private QuestionServiceImpl service;
+	
+	@MockBean
+	private QuestionRepository repo;
+			
+		@Test
+		public void addTest() {
+			Question testbean=new Question(2,null,"Which is good ?",1,2.0,2,0.0);
+			when(repo.save(testbean)).thenReturn(testbean);
+			assertEquals(testbean,service.addQuestion(testbean));
+		}
 		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		@Test
+		void contextLoads() {
+		}
 
+}
